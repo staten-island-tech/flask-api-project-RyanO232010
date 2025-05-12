@@ -1,27 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Damians sad life</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Weather App</title>
 </head>
 <body>
-    <h1>All about 大便 (Damian Fung)💩</h1>
-    <h2> (Don't talk to this kid)</h2>
-    <h3>This page is about Damian, he likes weird things and does volunteer work at a library. I have no idea how he is in Staten Island Tech but I was unfortunate enough to meet him in 6th grade.</h3>
-    
-    <div class="interests">
-        {% for item in interest %}
-            <div class="interest">
-                <h2>{{ item.text }}</h2>
-                <img src="{{ item.img }}" alt="Image for {{ item.text }}" width="300" height="200" >
-            </div>
-        {% endfor %}
-    </div>
-
-    <a href="https://drive.google.com/file/d/1EVtGef6YZnXs6XRsCq3VroQ3pWEF1BGQ/view?usp=sharing" target="_blank" style="color: black;">
-        <h1>Damian's Hobby</h1>
-    </a>
+    <form method="get">
+        <input type="text" name="city" placeholder="Enter city">
+        <button type="submit">Get Weather</button>
+    </form>
+    {% if weather.error %}
+        <p>{{ weather.error }}</p>
+    {% else %}
+        <h2>Weather in {{ weather.location }}</h2>
+        <p>Temperature: {{ weather.temp_c }}°C</p>
+        <p>Condition: {{ weather.condition }}</p>
+    {% endif %}
 </body>
 </html>
