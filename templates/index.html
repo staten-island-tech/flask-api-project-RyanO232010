@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Weather App</title>
+    <title>Chinese Radical Lookup</title>
 </head>
 <body>
-    <form method="get">
-        <input type="text" name="city" placeholder="Enter city">
-        <button type="submit">Get Weather</button>
+    <h1>Chinese Characters by Radical</h1>
+
+    <form method="POST">
+        <label for="radical">Enter Radical Number:</label>
+        <input type="number" name="radical" required>
+        <button type="submit">Search</button>
     </form>
-    {% if weather.error %}
-        <p>{{ weather.error }}</p>
-    {% else %}
-        <h2>Weather in {{ weather.location }}</h2>
-        <p>Temperature: {{ weather.temp_c }}°C</p>
-        <p>Condition: {{ weather.condition }}</p>
+
+    {% if radical_number %}
+        <h2>Characters with Radical {{ radical_number }}:</h2>
+        <ul>
+            {% for char in characters %}
+                <li style="font-size: 24px;">{{ char }}</li>
+            {% endfor %}
+        </ul>
     {% endif %}
 </body>
 </html>

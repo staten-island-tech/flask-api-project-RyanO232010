@@ -1,32 +1,53 @@
 from flask import Flask, render_template, request
 import requests
 
-app = Flask(__name__)
+app = Flask(__name__) 
+"""
 
-@app.route('/')
+@app.route('/', methods=["GET", "POST"])
 def home():
-    city = request.args.get('city', 'New York')  
-    url = "https://api.weatherapi.com/v1/current.json"
-    params = {
-        "key": "your_real_api_key_here", 
-        "q": city,
-        "aqi": "no"
-    }
+    characters = []
+    radical_number = None
 
-    weather_data = {}
-    response = requests.get(url, params=params)
+    if request.method == "POST":
+        radical_number = request.form.get("radical")
 
-    if response.status_code == 200:
-        data = response.json()
-        weather_data = {
-            "location": data["location"]["name"],
-            "temp_c": data["current"]["temp_c"],
-            "condition": data["current"]["condition"]["text"]
-        }
-    else:
-        weather_data = {"error": "Unable to fetch weather data."}
+        url = f"http://ccdb.hemiola.com/characters/radicals/{radical_number}"
 
-    return render_template('index.html', weather=weather_data)
+        response = requests.get(url)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+        if response.status_code == 200:
+            characters = response.json()
+        else:
+            characters = ["Error fetching data"]
+            print("Status code:", response.status_code)
+
+    return render_template("index.html", characters=characters, radical_number=radical_number)
+
+ """
+
+@app.route('/', methods=["GET", "POST"])
+def home():
+    characters = []
+    radical_number = None
+
+    if request.method == "POST":
+        radical_number = request.form.get("radical")
+        print("User entered radical:", radical_number)  # Debug
+
+        # Make sure it's not empty or None
+        if radical_number:
+            url = f"http://ccdb.hemiola.com/characters/radicals/{radical_number}"
+            print("Requesting URL:", url)  # Debug
+
+            response = requests.get(url)
+            print("Status code:", response.status_code)  # Debug
+
+            if response.status_code == 200:
+                characters = response.json()
+            else:
+                characters = ["Error fetching data"]
+        else:
+            characters = ["No radical number provided!"]
+
+    return render_template("index.html", characters=characters, radical_number=radical_number)
