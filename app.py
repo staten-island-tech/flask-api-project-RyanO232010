@@ -1,37 +1,32 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, jsonify
 import requests
+from flask_cors import CORS  # Importing CORS
 
 app = Flask(__name__)
+CORS(app)  # Enabling CORS for all routes
 
-@app.route('/', methods=["GET", "POST"])
+DND_API_URL = "https://www.dnd5eapi.co/api/ability-scores/cha"
+
+@app.route('/')
 def home():
-    characters = []
-    radical_number = None
+    return render_template('index.html')
 
-    if request.method == "POST":
-        radical_number = request.form.get("radical")
-        print("User entered radical:", radical_number)
+@app.route('/api/charisma', methods=['GET'])
+def get_charisma():
+    try:
+        response = requests.get(DND_API_URL)
+        response.raise_for_status()  # Check for errors
+        data = response.json()
 
-        if radical_number:
-            try:
-                url = f"http://ccdb.hemiola.com/characters/radicals/{radical_number}"
-                print("Requesting URL:", url)
-                response = requests.get(url)
-                print("Status code:", response.status_code)
-
-                if response.status_code == 200:
-                    data = response.json()
-                    characters = data.get("characters", [])
-                    print("Characters received:", characters)
-                else:
-                    print(f"Error fetching data: {response.status_code}, {response.text}")
-                    characters = [f"Error fetching data (status {response.status_code})"]
-            except Exception as e:
-                characters = [f"Exception occurred: {str(e)}"]
-        else:
-            characters = ["No radical number provided!"]
-
-    return render_template("index.html", characters=characters, radical_number=radical_number)
+        result = {
+            "name": data.get("name"),
+            "full_name": data.get("full_name"),
+            "desc": data.get("desc", []),  # Default to an empty list if no description
+            "skills": data.get("skills", [])  # Default to an empty list if no skills
+        }
+        return jsonify(result)
+    except requests.RequestException as e:
+        return jsonify({"error": "Failed to fetch data from D&D API", "details": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

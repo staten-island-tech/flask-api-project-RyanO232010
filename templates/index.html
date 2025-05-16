@@ -1,51 +1,72 @@
-<!-- <!DOCTYPE html>
-<html>
-<head>
-    <title>Chinese Radical Lookup</title>
-</head>
-<body>
-    <h1>Chinese Characters by Radical</h1>
-
-    <form method="POST">
-        <label for="radical">Enter Radical Number:</label>
-        <input type="number" name="radical" required>
-        <button type="submit">Search</button>
-    </form>
-
-    {% if radical_number %}
-        <h2>Characters with Radical {{ radical_number }}:</h2>
-        <ul>
-            {% for char in characters %}
-                <li style="font-size: 24px;">{{ char }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-</body>
-</html> -->
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Chinese Radical Lookup</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dungeons & Dragons: Charisma</title>
+
+  <!-- Link to external CSS file -->
+  <link rel="stylesheet" href="/static/styles.css">
+
 </head>
 <body>
-    <h1>Chinese Characters by Radical</h1>
 
-    <form method="POST">
-        <label for="radical">Enter Radical Number:</label>
-        <input type="number" name="radical" required>
-        <button type="submit">Search</button>
-    </form>
+  <h1>Dungeons & Dragons: Charisma</h1>
+  <div class="container">
+    <button onclick="fetchCharisma()">Get Charisma Info</button>
 
-    {% if radical_number %}
-        <h2>Characters with Radical {{ radical_number }}:</h2>
-        <ul>
-            {% for char in characters %}
-                <li style="font-size: 24px;">{{ char }}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No characters found for this radical number.</p>
-    {% endif %}
+    <div class="output" id="output">
+      <!-- Dynamic content will be displayed here -->
+    </div>
+  </div>
+
+  <script>
+    function fetchCharisma() {
+      fetch('http://localhost:5000/api/charisma') // API URL for Charisma data
+        .then(response => {
+          if (response.status === 200) {
+            return response.json(); // Parse JSON if the status is 200
+          } else {
+            throw new Error(`Request failed with status ${response.status}`);
+          }
+        })
+        .then(data => {
+          const output = document.getElementById('output');
+          // Clear previous output
+          output.innerHTML = '';
+
+          // Check if the response contains any error
+          if (data.error) {
+            output.innerHTML = `<p>Error: ${data.error}</p>`;
+          } else {
+            // Ensure desc and skills are handled properly if they are undefined or empty
+            const skillsList = data.skills && data.skills.length ? 
+                data.skills.map(skill => `<li>${skill.name}</li>`).join('') : '<li>No skills available</li>';
+
+            const descList = data.desc && data.desc.length ? 
+                data.desc.map(d => `<li>${d}</li>`).join('') : '<li>No description available</li>';
+
+            output.innerHTML = `
+              <h2>${data.full_name}</h2>
+              <p><strong>Name:</strong> ${data.name}</p>
+              <p><strong>Description:</strong></p>
+              <ul>
+                ${descList}
+              </ul>
+              <p><strong>Skills:</strong></p>
+              <ul>
+                ${skillsList}
+              </ul>
+            `;
+          }
+        })
+        .catch(error => {
+          const output = document.getElementById('output');
+          output.innerHTML = `<p>Error: ${error.message}</p>`;  // Display error message from the catch block
+          console.error('Error:', error);
+        });
+    }
+  </script>
+
 </body>
 </html>
