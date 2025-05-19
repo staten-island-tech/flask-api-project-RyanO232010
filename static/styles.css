@@ -1,46 +1,31 @@
 
-body {
-    font-family: Arial, sans-serif;
-    margin: 30px;
-    text-align: center;
-    background-color: #f9f9f9;
+
+  :root {
+    color-scheme: dark;
+    --bg: #212121;
+    --accent-bg: #2b2b2b;
+    --text: #dcdcdc;
+    --text-light: #ababab;
+    --accent: #ffb300;
+    --accent-hover: #ffe099;
+    --accent-text: var(--bg);
+    --code: #f06292;
+    --preformatted: #ccc;
+    --disabled: #111;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center;  /* Center horizontally */
+    margin: 20px 0;           /* Optional spacing */
+  }
+
+  #charismaButton {
+    transition: opacity 0.5s ease; /* Smooth fade transition */
+    opacity: 1;
   }
   
-  h1 {
-    color: #2c3e50;
-  }
-  
-  .container {
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  
-  button {
-    padding: 10px 20px;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #2980b9;
-  }
-  
-  .output {
-    margin-top: 20px;
-    padding: 15px;
-    background-color: #ecf0f1;
-    border-radius: 8px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    color: #2c3e50;
-  }
-  
-  ul {
-    text-align: left;
+  #charismaButton.fade-out {
+    opacity: 0;
+    pointer-events: none; /* Prevent interaction while fading out */
   }

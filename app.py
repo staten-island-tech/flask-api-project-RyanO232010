@@ -5,7 +5,7 @@ from flask_cors import CORS  # Importing CORS
 app = Flask(__name__)
 CORS(app)  # Enabling CORS for all routes
 
-DND_API_URL = "https://www.dnd5eapi.co/api/ability-scores/cha"
+DND_API_URL = "https://www.dnd5eapi.co/api/ability-scores/str"
 
 @app.route('/')
 def home():
