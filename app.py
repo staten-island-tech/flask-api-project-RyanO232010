@@ -1,39 +1,35 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, request
 import requests
-from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
 
-DND_API_URL = "https://www.dnd5eapi.co/api/ability-scores/"
+@app.route('/', methods=['GET'])
+def index():
+    query = request.args.get('q', '').strip().lower()
+    url = "https://api.fbi.gov/wanted/v1/list"
 
-@app.route('/')
-def home():
-    return render_template('index.html')
+    if query:
+        url += f"?q={query}"
 
-@app.route('/api/abilities', methods=['GET'])
-def get_ability_urls():
-    try:
-        response = requests.get(DND_API_URL)
-        response.raise_for_status()
-        data = response.json()
+    response = requests.get(url)
+    data = response.json()
+    items = data.get("items", [])
 
-        results = data.get("results", [])
+    if query:
+        filtered_items = []
+        for item in items:
+            title = (item.get('title') or '').lower()
+            aliases = item.get('aliases') or []
 
-        # Build a list of abilities with index, name, and full URL
-        abilities = [
-            {
-                "index": ability.get("index"),
-                "name": ability.get("name"),
-                "url": f"https://www.dnd5eapi.co{ability.get('url')}"
-            }
-            for ability in results
-        ]
+            # Ensure aliases is a list of strings
+            aliases = [a.lower() for a in aliases if isinstance(a, str)]
 
-        return jsonify(abilities)
+            if query in title or any(query in alias for alias in aliases):
+                filtered_items.append(item)
 
-    except requests.RequestException as e:
-        return jsonify({"error": "Failed to fetch ability scores", "details": str(e)}), 500
+        items = filtered_items
+
+    return render_template("index.html", items=items, query=request.args.get('q', ''))
 
 if __name__ == '__main__':
     app.run(debug=True)

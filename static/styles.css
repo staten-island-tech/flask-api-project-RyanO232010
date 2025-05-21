@@ -1,31 +1,79 @@
+/* General page layout */
+
+:root {
+  color-scheme: dark;
+  --bg: #212121;
+  --accent-bg: #2b2b2b;
+  --text: #dcdcdc;
+  --text-light: #ababab;
+  --accent: #ffb300;
+  --accent-hover: #ffe099;
+  --accent-text: var(--bg);
+  --code: #f06292;
+  --preformatted: #ccc;
+  --disabled: #111;
+}
 
 
-  :root {
-    color-scheme: dark;
-    --bg: #212121;
-    --accent-bg: #2b2b2b;
-    --text: #dcdcdc;
-    --text-light: #ababab;
-    --accent: #ffb300;
-    --accent-hover: #ffe099;
-    --accent-text: var(--bg);
-    --code: #f06292;
-    --preformatted: #ccc;
-    --disabled: #111;
-  }
+body {
+  font-family: Arial, sans-serif;
+  background-color: #3a3a3a;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Horizontally center all child content */
+}
 
-  .button-container {
-    display: flex;
-    justify-content: center;  /* Center horizontally */
-    margin: 20px 0;           /* Optional spacing */
-  }
+/* Center the heading */
+h1 {
+  margin-top: 20px;
+  text-align: center;
+}
 
-  #charismaButton {
-    transition: opacity 0.5s ease; /* Smooth fade transition */
-    opacity: 1;
-  }
-  
-  #charismaButton.fade-out {
-    opacity: 0;
-    pointer-events: none; /* Prevent interaction while fading out */
-  }
+/* Search form styling */
+.search-form {
+  margin: 20px 0;
+  text-align: center;
+}
+
+input[type="text"] {
+  padding: 8px;
+  width: 300px;
+  font-size: 16px;
+}
+
+button {
+  padding: 8px 12px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Grid layout for cards */
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Center the cards horizontally */
+  gap: 20px;
+  max-width: 1000px;
+  margin-bottom: 40px;
+}
+
+/* Individual card styling */
+.card {
+  flex: 1 1 250px; 
+  max-width: 600px;
+  min-width: 200px;
+  padding: 1rem;
+  margin: 0.5rem;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+}

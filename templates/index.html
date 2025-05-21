@@ -2,73 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dungeons & Dragons: Ability Scores</title>
+  <title>FBI Wanted List</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <!-- Minified version -->
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 
-  <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
-  <link rel="stylesheet" href="/static/styles.css" />
+<!-- Un-Minified version -->
+<link rel="stylesheet" href="https://cdn.simplecss.org/simple.css">
 </head>
 <body>
+  <h1>FBI Most Wanted</h1>
 
-  <h1>Dungeons & Dragons: Ability Scores</h1>
+  <form action="/" method="get" class="search-form">
+    <input type="text" name="q" placeholder="Search by name or keyword..." value="{{ query }}">
+    <button type="submit">Search</button>
+  </form>
 
-  <div id="ability-list">
-    <h2>Ability Scores</h2>
-    <ul id="abilities"></ul>
+  <div class="grid">
+    {% for item in items %}
+    <div class="card">
+      {% if item.images %}
+      <img src="{{ item.images[0].thumb }}" alt="Photo of {{ item.title }}">
+      {% endif %}
+      <h2>{{ item.title }}</h2>
+      <p><strong>Aliases:</strong> {{ item.aliases | join(", ") if item.aliases }}</p>
+      <p><strong>Nationality:</strong> {{ item.nationality or 'Unknown' }}</p>
+      <p><a href="{{ item.url }}" target="_blank">More Info</a></p>
+    </div>
+    {% endfor %}
   </div>
-
-  <div class="output" id="output">
-    <!-- Detailed info will appear here -->
-  </div>
-
-  <script>
-    // Fetch the list of all ability scores
-    fetch('/api/abilities')
-      .then(res => res.json())
-      .then(data => {
-        const list = document.getElementById('abilities');
-        list.innerHTML = '';
-
-        data.forEach(ability => {
-          const item = document.createElement('li');
-          item.innerHTML = `<button onclick="fetchAbilityDetails('${ability.index}')">${ability.name}</button>`;
-          list.appendChild(item);
-        });
-      })
-      .catch(err => {
-        document.getElementById('abilities').innerHTML = `<li>Error loading abilities: ${err.message}</li>`;
-      });
-
-    // Fetch and display details for a specific ability
-    function fetchAbilityDetails(index) {
-      fetch(`https://www.dnd5eapi.co/api/ability-scores/${index}`)
-        .then(res => res.json())
-        .then(data => {
-          const output = document.getElementById('output');
-
-          const skillsList = data.skills?.length
-            ? data.skills.map(skill => `<li>${skill.name}</li>`).join('')
-            : '<li>No skills available</li>';
-
-          const descList = data.desc?.length
-            ? data.desc.map(d => `<li>${d}</li>`).join('')
-            : '<li>No description available</li>';
-
-          output.innerHTML = `
-            <h2>${data.full_name}</h2>
-            <p><strong>Index:</strong> ${data.index}</p>
-            <p><strong>Name:</strong> ${data.name}</p>
-            <p><strong>Description:</strong></p>
-            <ul>${descList}</ul>
-            <p><strong>Skills:</strong></p>
-            <ul>${skillsList}</ul>
-          `;
-        })
-        .catch(err => {
-          document.getElementById('output').innerHTML = `<p>Error: ${err.message}</p>`;
-        });
-    }
-  </script>
-
 </body>
 </html>
