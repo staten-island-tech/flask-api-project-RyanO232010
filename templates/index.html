@@ -30,6 +30,16 @@
       <p><a href="{{ item.url }}" target="_blank">More Info</a></p>
     </div>
     {% endfor %}
+  <div class ="next">
+    {% if prev_page %}
+    <a href="{{ url_for('index', q=query, page=prev_page) }}">Previous</a>
+  {% endif %}
+  
+  {% if next_page %}
+    <a href="{{ url_for('index', q=query, page=next_page) }}">Next</a>
+  {% endif %}
+</div>
+    
   </div>
 </body>
 </html>
